@@ -1,2 +1,5 @@
 .conda
 /ids-env
+/Assignment 2/distributed_data_processing/haters
+/Assignment 2/distributed_data_processing/top
+__pycache__
