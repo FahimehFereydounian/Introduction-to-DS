@@ -27,13 +27,6 @@ class BestMovies(MRJob):
             count += 1
         yield key, (total_ratings, count)
 
-
-        # review_count = sum(1 for _, _ in values) 
-        # rating_sum = sum(rating for rating, _ in values)
-        # if review_count == 0:
-        #     yield key, (0, 0)
-        # yield key, (rating_sum / review_count, review_count)
-
     def map_2(self, key, value):
         total_ratings, count = value
         if count == 0:
@@ -43,9 +36,9 @@ class BestMovies(MRJob):
             yield None, (key, avg_rating, count)   
 
     def reduce_2(self, key, values):
-        top_movies = sorted(values, key=lambda x: (-x[1], -x[2]))[:11]
+        top_movies = sorted(values, key=lambda x: (key, -x[1], -x[2]))[:11]
         for movie in top_movies:
-            yield None, movie
+            yield key, movie
 
     # this post-processing mapper is for convenience
     # the output from the last reducer step is simply written as text into a file, ignoring the key
