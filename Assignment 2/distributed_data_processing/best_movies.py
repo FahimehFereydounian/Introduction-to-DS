@@ -36,9 +36,9 @@ class BestMovies(MRJob):
             yield None, (key, avg_rating, count)   
 
     def reduce_2(self, key, values):
-        top_movies = sorted(values, key=lambda x: (key, -x[1], -x[2]))[:11]
+        top_movies = sorted(values, key=lambda x: (key, -x[1], -x[2]))[:8]
         for movie in top_movies:
-            yield key, movie
+            yield None, (key, movie)
 
     # this post-processing mapper is for convenience
     # the output from the last reducer step is simply written as text into a file, ignoring the key
