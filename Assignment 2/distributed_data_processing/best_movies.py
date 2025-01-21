@@ -15,20 +15,30 @@ class BestMovies(MRJob):
 
     def map_1(self, _: int, line: tuple[str, str, float, str, float]):
         user_id, movie_id, rating, timestamp, rating_normalized = line
-        # TODO
-        ...
+        movie_id = int(movie_id)
+        rating = float(rating)
+        yield movie_id, (rating, 1)
 
     def reduce_1(self, key, values):
-        # TODO
-        ...
+        total_ratings = 0
+        count = 0
+        for rating, _ in values:
+            total_ratings += rating
+            count += 1
+        yield key, (total_ratings, count)
 
     def map_2(self, key, value):
-        # TODO
-        ...
+        total_ratings, count = value
+        if count == 0:
+            pass
+        avg_rating = total_ratings / count if count > 0 else 0
+        if avg_rating >= 4.0 and count >= 10:
+            yield None, (key, avg_rating, count)   
 
     def reduce_2(self, key, values):
-        # TODO
-        ...
+        top_movies = sorted(values, key=lambda x: (key, -x[1], -x[2]))[:11]
+        for movie in top_movies:
+            yield key, movie
 
     # this post-processing mapper is for convenience
     # the output from the last reducer step is simply written as text into a file, ignoring the key
